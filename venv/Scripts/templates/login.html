@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    	<title>Sign in or Sign Up</title>
+
+        <!-- url_for links the style sheet with the html in python -->
+    	<link rel="stylesheet" href="{{ url_for('static', filename='css/login_style.css') }}"/>
+
+        <!-- this is the only code I got to work for setting the background -->
+        <style>
+            body {
+                background-image: url(static/images/gradient_pink-blue.jpg);
+                background-size: 150%;
+                background-repeat: no-repeat;
+                line-height: 50px;
+            }
+        </style>
+	</head>
+
+	<body>
+		<div class="login-page">
+          <!--/Users/braden/PycharmProjects/MusicVideoHub/MusicVideoHubGit/venv/Scripts/static/images/CGS_3066_logo_blue.png-->
+          <div id="logo_blue_white"> <a href = "login.html"> <img src="{{ url_for('static', filename='images/CGS_3066_logo_blue.png') }}"/></a></div>
+		    <div class="form">
+                <form class="login-form" action="/" method="post">
+                    <input type="text" id="lfemail" placeholder="Email" name="username" value="{{ request.form.username }}"/>
+                    <input type="password" id="lfpassword" placeholder="Password" name="password" value="{{ request.form.password }}"/>
+                    <!--<button id = "loginbtn"><a href = '#'>Login</a></button>-->
+                    <input class="btn btn-default" type="submit" value="Login">
+                    <p class="message">Not Registered? <a id="register" href="#">Register</a> </p>
+                </form>
+                <form class="register-form" action="/register" method="post">
+                    <input type="text" id="rfemail" placeholder="Email" name="username_register" value="{{ request.form.username_register }}"/>
+                    <input type="text"  id="rfpassword" placeholder="Password" name="password_register" value="{{ request.form.password_register }}"/>
+                    <!--<button id="createAccount_button">Create</button>-->
+                    <input class="btn btn-default" type="submit" value="Register">
+                    <p class="message">Already have an account? <a id="sign-in" href="#"> Sign In</a> </p>
+                </form>
+            </div>
+          </div>
+
+    <script>
+        // Sign-In and Register show and unshow
+        var signIn = document.getElementById("sign-in");
+        var register = document.getElementById("register");
+
+        var showRegister_form = document.querySelector(".register-form");
+        var showLogin_form = document.querySelector(".login-form");
+
+        register.onclick = function() {
+            showLogin_form.style.display = "none";
+            showRegister_form.style.display = "unset";
+        }
+
+        signIn.onclick = function() {
+	        showLogin_form.style.display = "unset";
+	        showRegister_form.style.display = "none";
+        }
+    </script>
+
+    </body>
+</html>

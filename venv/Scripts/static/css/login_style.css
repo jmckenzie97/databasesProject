@@ -1,0 +1,149 @@
+/*blue box around input*/
+input:focus{
+    outline: none;
+}
+
+.login-page {
+	width: 360px;
+	padding: 5% 0 0;
+	margin: auto;
+}
+
+#logo_blue_white img {
+  position: relative;
+  left: 28%;
+  width: 40%;
+  height: 40%;
+  margin: 0 auto;
+}
+
+.form {
+	position: relative;
+	z-index: 1;
+	/*background: #ffffff;*/
+	max-width: 360px;
+	margin: 0 auto 100px;
+	padding: 45px;
+	text-align: center;
+	margin-top: 5%;
+	border-right: .1px solid #fff;  /* right, white line */
+	border-left: .1px solid #fff;  /* left, white line */
+}
+
+.form:hover {
+	border-right: .1px solid #7CB8FF;  /* right, white line */
+	border-left: .1px solid #7CB8FF;  /* left, white line */
+	padding: 12.49%;
+	line-height: 318%;
+}
+
+/*all of the input fields on create page except create button*/
+.form input {
+	font-family: "Roboto", sans-serif;
+	background: #f2f2f2;
+	width: 100%;
+	color: #878f99;
+	margin: 0 0 15px;
+	padding: 15px;
+	box-sizing: border-box;
+	font-size: 14px;
+	border-radius: 10px;
+    border: 1px solid #eca1a6;
+    margin-bot
+    outline: 0; /* Remove blue square border after click */
+}
+
+/*all of the input fields on create page except create button*/
+.form input:hover {
+	/* 10px 20px 30px 40px */
+	/* top right bottom left */
+	border: 3px solid #eca1a6;
+	margin-bottom: 4.5%; /* settles the hover attribute so everything stays still */
+
+	/*color: ;
+	text-decoration-color: #eca1a6;*/
+}
+
+.register-form #createAccount_button {
+	/*display: block; /* displays on new line and takes up whole width */
+	width: 140px;
+	color: #878f99;
+	font-family: "Roboto", sans-serif;
+	padding: 5px;
+	margin: 20px auto;
+	text-align: center;
+	border-radius: 10px;
+	border: 1px solid #eca1a6;
+	background: #f2f2f2;
+	outline: 0;	/* Removes outline when the button is clicked */
+}
+
+.register-form #createAccount_button:hover {
+	background-color: #7CB8FF; /*hover login turns blue*/
+	color: #fff;
+}
+
+
+.login-form #loginbtn {
+	display: block;
+	width: 140px;
+	color: #878f99;
+	font-family: "Roboto", sans-serif;
+	padding: 5px;
+	margin: 20px auto;
+	text-align: center;
+	border-radius: 10px;
+	border: 1px solid #eca1a6;
+	background: #f2f2f2;
+	outline: 0;
+}
+
+.login-form #loginbtn a {
+	text-decoration: none;
+	color: #878f99;
+}
+
+.login-form #loginbtn a:hover {
+	text-decoration: none;
+	color: #fff;
+}
+
+
+.login-form #loginbtn:hover {
+	background-color: #7CB8FF;
+	color: #fff;
+	text-decoration-color: #fff;
+}
+
+
+/*already have an account?*/
+.message {
+	font-family: "Roboto", sans-serif;
+	color: #fff;
+	position: relative;
+}
+
+.message:hover {
+	padding: 1%;
+	margin-top: 4.7%;
+	margin-bottom: 4.5%;
+	border-radius: 5px;
+	border: 1px solid #f2f2f2;
+	color: #f2f2f2;
+}
+
+.message a {
+	font-family: "Roboto", sans-serif;
+	text-decoration: none;
+	color: #fff;
+}
+
+.message a:hover {
+	text-decoration: none;
+	color: #7CB8FF;
+}
+
+.register-form {
+	display: none;
+}
+

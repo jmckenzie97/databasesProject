@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<title>Your Profile</title>
+    	<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_style.css') }}"/>
+        <style>
+            body {
+                background-image: url(static/images/gradient_pink-blue.jpg);
+                background-size: 150%;
+                background-repeat: no-repeat;
+                line-height: 50px;
+            }
+/* The side navigation menu */
+
+
+            #header {
+                margin: 0 auto;
+                padding-top: 7%;
+                padding-bottom: 7%;
+                color: #fff;
+                font-family: Roboto, sans-serif;
+            }
+
+            #leftbox {
+                border-left-style: solid;
+                border-left-color: #fff;
+                border-left-width: thin;
+                position: relative;
+                left: -372px;
+                top: -17px;
+                padding-left: 42%;
+            }
+
+            #headerBorder {
+                {#margin: 2% auto;#}
+                border-top-style: solid;
+                border-top-color: #fff;
+                border-top-width: thin;
+                border-bottom-style: solid;
+                border-bottom-color: #fff;
+                border-bottom-width: thin;
+                width: 6.8%;
+                padding-left: 15%;
+                padding-right: 20%;
+                position: relative;
+                left: 100px;
+            }
+
+            #header_title {
+                width: 400px; /*Account Overview*/
+                color: #fff;
+                font-family: Roboto, sans-serif;
+                {#position: relative;#}
+                {#left: 200px;#}
+            }
+
+            #topTracks {
+                width: 400px; /*Account Overview*/
+                color: #fff;
+                font-family: Roboto, sans-serif;
+                text-align: left;
+            }
+
+            #output {
+                border: 3px solid #eca1a6;
+                border-radius: 100px;
+            }
+
+            .sidenav {
+                height: 100%;
+                width: 0;
+                position: fixed;
+                z-index: 1;
+                top: 0;
+                left: 0;
+                background-color: #7CB8FF;
+                overflow-x: hidden;
+                transition: 0.5s;
+                padding-top: 60px;
+            }
+
+            .sidenav a {
+                padding: 8px 8px 8px 32px;
+                text-decoration: none;
+                font-family: Roboto, sans-serif;
+                font-size: 25px;
+                color: #fff;
+                display: block;
+                transition: 0.3s;
+            }
+
+            .sidenav a:hover {
+                color: #eca1a6;
+            }
+
+            .sidenav .closebtn {
+                position: absolute;
+                top: 0;
+                right: 25px;
+                font-size: 36px;
+                margin-left: 50px;
+            }
+
+            /* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+            @media screen and (max-height: 450px) {
+                .sidenav {padding-top: 15px;}
+                .sidenav a {font-size: 18px;}
+            }
+        </style>
+	</head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<body>
+
+        <span style="font-size:30px;cursor:pointer; color: #fff" onclick="openNav()">&#9776;</span>
+        <div id="headerBorder">
+        <h1 id="header_title">Account Overview</h1>
+        </div>
+        <div id="mySidenav" class="sidenav">
+            <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&#9721;</a>
+            <a href="home">Home</a>
+            <a href="profile">Profile</a>
+        </div>
+
+        </div>
+            <div class = "userinfo">
+
+                <div id = "leftbox">
+                    <!-- Profile Picture upload -->
+                    <p><input type="file"  accept="image/*" name="image" id="file"  onchange="loadFile(event)" style="display: none;"></p>
+                    <p><label for="file" style="cursor: pointer; color: #fff;">Upload Image</label></p>
+
+                    <p><img id="output" src= "static/images/noProfilePicture.png" width="200" /></p>
+                    <script>
+                        var loadFile = function(event) {
+                            var image = document.getElementById('output');
+                            image.src = URL.createObjectURL(event.target.files[0]);
+                        };
+                    </script>
+                    <!-- end of Profile Picture upload -->
+
+                    <div class = "user_name" style="font-family: Roboto, sans-serif; color: #fff;">
+                        <h2 style = "font-family: Roboto, sans-serif;">Your Email</h2>
+                        <h3 style=" position: relative; left: 25px;">{{email}}</h3>
+                        <h2>Your playlists</h2>
+                       <ul style="list-style-type:circle;">
+
+                       </ul>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <h1 id="plus"><a href="#"> + </a></h1>
+        <div id = "musicinfo">
+            <div id = "uploadlinks" class = "user_name" style="font-family: Roboto, sans-serif; color: #fff;">
+                <h2 style="font-family: Roboto, sans-serif; color: #fff">Your Top Tracks On Spotify</h2>
+                <ol id="topTracks" type="1">
+
+                </ol>
+            </div>
+
+            <div id = "favorites">
+
+            </div>
+
+            <div id = "button">
+
+            </div>
+        </div>
+<script>
+function openNav() {
+  document.getElementById("mySidenav").style.width = "250px";
+}
+
+function closeNav() {
+  document.getElementById("mySidenav").style.width = "0";
+}
+
+// Music favorites plus sign show and unshow
+        var plus = document.getElementById("plus");
+        var rightColumn = document.getElementById("musicinfo");
+        var leftColumn = document.getElementById("login-page");
+        // var favContainer = document.getElementById("favorite_container");
+        rightColumn.style.display = "none";
+        console.log(rightColumn);
+        plus.onclick = function() {
+            plus.style.display = "none";
+            rightColumn.style.display = "unset";
+            rightColumn.style.cssFloat = "right";
+            leftColumn.style.margin = "auto";
+        }
+
+        plNames = {{ playlists | tojson }};
+        topTracks = {{ tracks | tojson }}
+
+        var ul = document.querySelector("ul");
+
+        for (var i = 0; i < plNames.length; i++) {
+            var name = plNames[i];
+
+            var listItem = document.createElement("li");
+            listItem.textContent = name;
+
+            ul.appendChild(listItem);
+        }
+
+        var ul = document.querySelector('#topTracks');
+
+        for (var i = 0; i < topTracks.length; i++) {
+            var tracks = topTracks[i];
+
+            var trackItem = document.createElement("li");
+            trackItem.textContent = tracks;
+
+            ul.appendChild(trackItem);
+        }
+
+
+</script>
+
+</body>
+</html>

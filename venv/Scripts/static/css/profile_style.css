@@ -1,0 +1,280 @@
+/*blue box around input*/
+/*input:focus{*/
+/*    outline: none;*/
+/*}*/
+
+/*body {*/
+/*	font-family: "Roboto", sans-serif;*/
+/*	margin-top: -75px;*/
+/*}*/
+
+#header_title {
+	width: 400px; /*Account Overview*/
+	color: #fff;
+}
+
+/*#profile_picture img {*/
+/*	position: relative;*/
+/*	left: 19%;*/
+/*	width: 60%;*/
+/*	height: 60%;*/
+/*	margin: 0 auto;*/
+/*	border-radius: 100px;*/
+/*}*/
+
+#output {
+	border: 3px solid #eca1a6;
+	border-radius: 100px;
+}
+
+/* Want to make the profile picture a link to upload image as well*/
+/*#output:hover {
+	border: 6px solid #eca1a6;
+	border-radius: 100px;
+	transition-delay: .02s;  delays for 1 second
+    -webkit-transition-delay: .02s; /* for Safari & Chrome
+    position: relative;
+}
+*/
+
+/*#choose_file button {*/
+/*	!*display: block; !* displays on new line and takes up whole width *!*/
+/*	width: 140px;*/
+/*	color: #878f99;*/
+/*	font-family: "Roboto", sans-serif;*/
+/*	padding: 5px;*/
+/*	margin: 20px auto;*/
+/*	text-align: center;*/
+/*	border-radius: 10px;*/
+/*	border: 1px solid #eca1a6;  */
+/*	background: #f2f2f2;*/
+/*	outline: 0;	!* Removes outline when the button is clicked *!*/
+/*}*/
+
+/* The side navigation menu */
+.sidenav {
+  height: 100%;
+  width: 0;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  background-color: #111;
+  overflow-x: hidden;
+  transition: 0.5s;
+  padding-top: 60px;
+}
+
+.sidenav a {
+  padding: 8px 8px 8px 32px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+  transition: 0.3s;
+}
+
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+
+.sidenav .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
+
+/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+
+.register-form #createAccount_button:hover {
+	background-color: #7CB8FF; /*hover login turns blue*/
+	color: #fff;
+}
+
+.user_name input {
+	background: #f2f2f2;
+	width: 100%;
+	margin: 0 0 15px;
+	padding: 15px;
+	box-sizing: border-box;
+	font-size: 14px;
+	border-radius: 10px;
+    border: 1px solid #eca1a6;
+    outline: 0;
+}
+
+.user_name input:hover {
+	border: 3px solid #eca1a6;
+}
+
+#leftbox {
+
+}
+
+.login-page {
+    width: 360px;
+	padding: 5% 0 0;
+	display: relative;
+	right: 80%;
+
+}
+
+/* left column */
+.userinfo {
+	/*pushes the account info left*/
+	padding-left: 25%;
+	left: 20%;
+	height: 500px;
+	width: 275px;
+	/*margin-left:100px;*/
+
+}
+
+#button1 {
+	width: 150px;
+	color: #878f99;
+	font-family: "Roboto", sans-serif;
+	padding: 5px;
+	margin: 20px auto;
+	text-align: center;
+	border-radius: 10px;
+	border: 1px solid #eca1a6;
+	background: #f2f2f2;
+	outline: 0;
+}
+
+#button2 {
+	width: 150px;
+	font-family: "Roboto", sans-serif;
+	padding: 5px;
+	margin: 20px auto;
+	text-align: center;
+	border-radius: 10px;
+	border: 1px solid #eca1a6;
+	background: #f2f2f2;
+	outline: 0;
+}
+
+#button2 a {
+	text-decoration: none;
+	color: #878f99;
+
+}
+
+#button1:hover {
+	background-color: #7CB8FF;
+	color: #fff;
+}
+
+#button2:hover {
+	background-color: #7CB8FF;
+}
+
+#button2 a:hover {
+	color: #fff;
+}
+
+/*Second Column*/
+#musicinfo {
+	margin-left: 13%;
+	margin-right: 20%;
+	text-align: center;
+	position: absolute;
+	left: 650px;
+	top:50px;
+	padding: 5%;
+	padding-bottom: 10%;
+	height: 550px;
+	width: 400px;
+	border-right: .1px solid #fff;  /* right, white line */
+	border-left: .1px solid #fff;
+}
+
+#musicinfo input {
+	background: #f2f2f2;
+	width: 75%;
+	margin: 0;
+	padding: 15px;
+	box-sizing: border-box;
+	font-size: 14px;
+	border-radius: 10px;
+    border: 1px solid #eca1a6;
+    outline: 0;
+}
+
+#musicinfo input:hover {
+	border: 3px solid #eca1a6;
+	/*transition-delay: 1s;*/ /* delays for 1 second */
+    /*-webkit-transition-delay: 1s;*/ /* for Safari & Chrome */
+}
+
+#musicinfo:hover {
+	border-right: .1px solid #7CB8FF;  /* right, white line */
+	border-left: .1px solid #7CB8FF;  /* left, white line */
+	/*transition-delay: 1s;*/ /* delays for 1 second */
+    /*-webkit-transition-delay: 1s;*/ /* for Safari & Chrome */
+}
+
+#uploadlinks {
+	height: 200px;
+	width: auto;
+	margin: 0 auto;
+}
+
+#spotify pre {
+	margin-bottom: 0;
+}
+
+#genres {
+	margin-bottom: 0;
+}
+
+/* Plus Sign */
+#plus {
+	position: absolute;
+	color: #fff;
+	padding:30px;
+	top: 30%;
+	left: 40%;
+	height: 20px;
+	width: 20px;
+}
+
+#plus a {
+	position: absolute;
+	color: #fff;
+	float: right;
+	border: 3px solid #fff;
+	border-radius: 100%;
+	top: 40%;
+	left: 70%;
+	float: right;
+	padding-top: 10px;
+	padding-right: 25px;
+	padding-left: 25px;
+	padding-bottom: 10px;
+	text-decoration: none;
+}
+
+#plus:hover {
+	color: #7CB8FF;
+
+}
+
+#plus a:hover {
+	color: #7CB8FF;
+	border: 3px solid #7CB8FF;
+
+}
+
+
+#favorites {
+	margin-top: 75px;
+}
+

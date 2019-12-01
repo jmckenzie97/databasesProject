@@ -73,7 +73,7 @@ def home():
             if "Add Pet Listing" in request.form:
                 return redirect(url_for('pets'))
             elif "Logout" in request.form:
-            	return redirect(url_for('logout'))
+                return redirect(url_for('logout'))
         else:
             # User is loggedin show them the home page
             return render_template('home.html', username=session['username'])
@@ -170,6 +170,8 @@ def owner():
 def pets():
     if 'loggedin' in session:
         if request.method == "POST" and 'name' in request.form and 'breed' in request.form and 'weight' in request.form:
+            if request.method == "POST" and "View Listings" in request.form:
+                return redirect(url_for('listings'))
             animal = request.form['animal']
             name = request.form['name'];
             breed = request.form['breed'];
@@ -194,9 +196,9 @@ def pets():
 def listings():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
-    				FROM pets\
-    				INNER JOIN owners ON pets.owner = owners.ownerid\
-    				INNER JOIN users ON owners.userid = users.id")
+                    FROM pets\
+                    INNER JOIN owners ON pets.owner = owners.ownerid\
+                    INNER JOIN users ON owners.userid = users.id")
     pets = cursor.fetchall()
 
     return render_template('listings.html', pets=pets);

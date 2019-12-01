@@ -35,20 +35,22 @@ def login():
         password = request.form['password']
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password))
+        cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (username, password))
         # Fetch one record and return result
         account = cursor.fetchone()
         # If account exists in accounts table in out database
         if account:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
-            session['id'] = account['id']
+            session['id'] = account['userID']
             session['username'] = account['username']
             # Redirect to home page
             return redirect(url_for('home'))
         else:
             # Account doesnt exist or username/password incorrect
             msg = 'Incorrect username/password!'
+            return render_template('login.html', msg=msg)
+
     # Show the login form with message (if any)
     return render_template('login.html')
 
@@ -100,28 +102,37 @@ def logout():
 def home():
     # Check if user is loggedin
     if 'loggedin' in session:
-        # User is loggedin show them the home page
-        return render_template('home.html', username=session['username'])
+        if request.method == 'POST':
+            if "addListing" in request.form:
+                return redirect(url_for('pets'))
+        else:
+            # User is loggedin show them the home page
+            return render_template('home.html', username=session['username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
 @app.route("/pets", methods=['GET', 'POST'])
 def pet():
-    if request.method == "POST" and 'name' in request.form and 'breed' in request.form and 'weight' in request.form:
-        animal = request.form['animal']
-        name = request.form['name'];
-        breed = request.form['breed'];
-        weight = request.form['weight'];
-        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    email = session['email']
+    print(username, file=sys.stderr)
+    if 'loggedin' in session:
+        if request.method == "POST" and 'name' in request.form and 'breed' in request.form and 'weight' in request.form:
+            animal = request.form['animal']
+            name = request.form['name'];
+            breed = request.form['breed'];
+            weight = request.form['weight'];
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-        cursor.execute('SELECT * FROM pets ORDER BY animalID DESC LIMIT 1')
-        lastEntry = cursor.fetchone()
-        lastID = lastEntry['animalID']
-        newID = lastID + 1
+            cursor.execute('SELECT * FROM pets ORDER BY animalID DESC LIMIT 1')
+            lastEntry = cursor.fetchone()
+            lastID = lastEntry['animalID']
+            newID = lastID + 1
 
-        cursor.execute('INSERT INTO pets VALUES (%s, %s, %s, %s, %s)', (newID, animal, name, breed, weight))
-        mysql.connection.commit()
-        return redirect(url_for('listings'))
+            cursor.execute('INSERT INTO pets VALUES (%s, %s, %s, %s, %s)', (newID, animal, name, breed, weight))
+            mysql.connection.commit()
+            return redirect(url_for('listings'))
+    else:
+        return redirect(url_for('login'))
 
     return render_template('pet.html')
 

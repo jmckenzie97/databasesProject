@@ -21,6 +21,7 @@
 		<div class="login-page">
           <div id="logo_blue_white"> <a href = "login.html"> <img src="{{ url_for('static', filename='images/CGS_3066_logo_blue.png') }}"/></a></div>
 		    <div class="form">
+                <p class="message" style="color:red">{{ msg }}</p>
                 <form class="login-form" action="/" method="post">
                     <input type="text" id="lfemail" placeholder="Email" name="username" value="{{ request.form.username }}"/>
                     <input type="password" id="lfpassword" placeholder="Password" name="password" value="{{ request.form.password }}"/>

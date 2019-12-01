@@ -1,8 +1,8 @@
-import pyrebase
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
+import sys
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
 
@@ -104,6 +104,33 @@ def home():
         return render_template('home.html', username=session['username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
+
+@app.route("/pets", methods=['GET', 'POST'])
+def pet():
+    if request.method == "POST" and 'name' in request.form and 'breed' in request.form and 'weight' in request.form:
+        animal = request.form['animal']
+        name = request.form['name'];
+        breed = request.form['breed'];
+        weight = request.form['weight'];
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+        cursor.execute('SELECT * FROM pets ORDER BY animalID DESC LIMIT 1')
+        lastEntry = cursor.fetchone()
+        lastID = lastEntry['animalID']
+        newID = lastID + 1
+
+        cursor.execute('INSERT INTO pets VALUES (%s, %s, %s, %s, %s)', (newID, animal, name, breed, weight))
+        mysql.connection.commit()
+        return redirect(url_for('listings'))
+
+    return render_template('pet.html')
+
+@app.route("/listings", methods=['GET', 'POST'])
+def listings():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute('SELECT * FROM pets')
+    pets = cursor.fetchall()
+    return render_template('listings.html', pets=pets);
 # ---- run method ---- #
 if __name__ == "__main__":
     app.run(debug=True)

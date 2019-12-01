@@ -21,12 +21,12 @@
 		<div class="login-page">
           <div id="logo_blue_white"> <a href = "login.html"> <img src="{{ url_for('static', filename='images/CGS_3066_logo_blue.png') }}"/></a></div>
 		    <div class="form">
-                <form class="login-form" action="{{ url_for('register') }}" method="post">
-                    <input type="email" id="lfemail" placeholder="Email" name="email" value="{{ request.form.email }}">
+                <form class="login-form" action="{{ url_for('adopter') }}" method="post">
+                   <input type="email" id="lfemail" placeholder="Email" name="email" value="{{ request.form.email }}">
                     <input type="text" id="lfuname" placeholder="Username" name="username" value="{{ request.form.username }}">
                     <input type="password" id="lfpassword" placeholder="Password" name="password" value="{{ request.form.password }}">
-                    <input type="checkbox" id="lfowner" name="owner" value="yeet" checked>
-                    <label for="lfowner">Pet owner?</label>
+                    <input type="number" id="adopterAge" placeholder="Age" name="age" value="{{ request.form.age }}">
+                    <input type="text" id="homeType" placeholder="Type of residence(Home, apt etc)" name="hometype" value="{{ request.form.hometype }}">
                     <input class="btn btn-default" type="submit" value="Register">
                 </form>
             </div>

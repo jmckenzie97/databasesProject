@@ -22,10 +22,12 @@
           <div id="logo_blue_white"> <a href = "login.html"> <img src="{{ url_for('static', filename='images/CGS_3066_logo_blue.png') }}"/></a></div>
 		    <div class="form">
                 <form class="login-form" action="/" method="post">
-                    <input type="text" id="lfemail" placeholder="Email" name="username" value="{{ request.form.username }}"/>
+                    <input type="text" id="lfemail" placeholder="Username" name="username" value="{{ request.form.username }}"/>
                     <input type="password" id="lfpassword" placeholder="Password" name="password" value="{{ request.form.password }}"/>
                     <input class="btn btn-default" type="submit" value="Login">
-                    <p class="message">Not Registered? <a id="register" href="{{ url_for('register') }}">Register</a> </p>
+                    <p class="message">Not Registered? <a id="registerowner" href="{{ url_for('owner') }}">Register as an owner</a> </p>
+                    <p class="message">Not Registered? <a id="registeradopter" href="{{ url_for('adopter') }}">Register as an adopter</a> </p>
+                    <div class="msg">{{ msg }}</div>
                 </form>
             </div>
           </div>

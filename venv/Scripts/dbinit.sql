@@ -24,6 +24,17 @@ CREATE TABLE IF NOT EXISTS `owners` (
   	`familysize` int(5) NOT NULL,
     `userid` int(11),
     PRIMARY KEY (`ownerid`),
-    FOREIGN  KEY(`userid`) REFERENCES users(`id`)
+    FOREIGN KEY(`userid`) REFERENCES users(`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+CREATE TABLE IF NOT EXISTS `pets` (
+	`petid` int(11) NOT NULL AUTO_INCREMENT,
+	`pet` varchar(50) NOT NULL,
+	`name` varchar(50) NOT NULL,
+	`breed` varchar(50) NOT NULL,
+	`weight` int(3) NOT NULL,
+    `owner` int(11),
+    PRIMARY KEY (`petid`),
+    FOREIGN KEY (`owner`) REFERENCES owners(ownerID)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 

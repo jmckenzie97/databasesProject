@@ -11,7 +11,7 @@ app.secret_key = 'your secret key'
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'MyNewPass'
+app.config['MYSQL_PASSWORD'] = 'password'
 app.config['MYSQL_DB'] = 'petFinder'
 
 # Intialize MySQL
@@ -42,7 +42,7 @@ def login():
         if account:
             # Create session data, we can access this data in other routes
             session['loggedin'] = True
-            session['id'] = account['userID']
+            session['id'] = account['id']
             session['username'] = account['username']
             # Redirect to home page
             return redirect(url_for('home'))
@@ -54,44 +54,9 @@ def login():
     # Show the login form with message (if any)
     return render_template('login.html', msg=msg)
 
-# @app.route("/register", methods=['GET', 'POST'])
-# def register():
-#     # Output message if something goes wrong...
-#     msg = ''
-#     # Check if "username", "password" and "email" POST requests exist (user submitted form)
-#     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
-#         # Create variables for easy access
-#         username = request.form['username']
-#         password = request.form['password']
-#         email = request.form['email']
-#         # Check if account exists using MySQL
-#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-#         cursor.execute("SELECT * FROM users WHERE username = '{0}'".format(username))
-#         account = cursor.fetchone()
-#         # If account exists show error and validation checks
-#         if account:
-#             msg = 'Account already exists!'
-#         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-#             msg = 'Invalid email address!'
-#         elif not re.match(r'[A-Za-z0-9]+', username):
-#             msg = 'Username must contain only characters and numbers!'
-#         elif not username or not password or not email:
-#             msg = 'Please fill out the form!'
-#         else:
-#             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-#             cursor.execute('INSERT INTO users VALUES (NULL, %s, %s, %s)', (username, password, email))
-#             mysql.connection.commit()
-#
-#             return redirect(url_for('own'))
-#
-#
-#     elif request.method == 'POST':
-#         # Form is empty... (no POST data)
-#         msg = 'Please fill out the form!'
-#     # Show registration form with message (if any)
-#     return render_template('register.html', msg=msg)
 
-@app.route('/pythonlogin/logout')
+
+@app.route('/pythonlogin/logout', methods=['GET', 'POST'])
 def logout():
     # Remove session data, this will log the user out
    session.pop('loggedin', None)
@@ -104,8 +69,14 @@ def logout():
 def home():
     # Check if user is loggedin
     if 'loggedin' in session:
-        # User is loggedin show them the home page
-        return render_template('home.html', username=session['username'])
+        if request.method == 'POST':
+            if "Add Pet Listing" in request.form:
+                return redirect(url_for('pets'))
+            elif "Logout" in request.form:
+            	return redirect(url_for('logout'))
+        else:
+            # User is loggedin show them the home page
+            return render_template('home.html', username=session['username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
@@ -187,7 +158,7 @@ def owner():
             idnum = id['id']
             cursor.execute('INSERT INTO owners VALUES (NULL, %s, %s, %s)', (int(age), famsize, idnum))
             mysql.connection.commit()
-            return redirect(url_for('login'))
+            return redirect(url_for('home'))
 
     elif request.method == 'POST':
         # Form is empty... (no POST data)
@@ -195,39 +166,25 @@ def owner():
     # Show registration form with message (if any)
     return render_template('owner.html', msg=msg)
 
-@app.route("/home", methods=['GET', 'POST'])
-def home():
-    # Check if user is loggedin
-    if 'loggedin' in session:
-        if request.method == 'POST':
-            if "addListing" in request.form:
-                return redirect(url_for('pets'))
-        else:
-            # User is loggedin show them the home page
-            return render_template('home.html', username=session['username'])
-    # User is not loggedin redirect to login page
-    return redirect(url_for('login'))
-
 @app.route("/pets", methods=['GET', 'POST'])
-def pet():
-    email = session['email']
-    print(username, file=sys.stderr)
+def pets():
     if 'loggedin' in session:
         if request.method == "POST" and 'name' in request.form and 'breed' in request.form and 'weight' in request.form:
             animal = request.form['animal']
             name = request.form['name'];
             breed = request.form['breed'];
             weight = request.form['weight'];
+            ownerID = session['id']
+            ownerEmail = ""
+
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("SELECT email FROM users WHERE id = '{0}'".format(ownerID))
+            owner = cursor.fetchone()
+            ownerEmail = owner['email']
 
-            cursor.execute('SELECT * FROM pets ORDER BY animalID DESC LIMIT 1')
-            lastEntry = cursor.fetchone()
-            lastID = lastEntry['animalID']
-            newID = lastID + 1
-
-            cursor.execute('INSERT INTO pets VALUES (%s, %s, %s, %s, %s)', (newID, animal, name, breed, weight))
+            cursor.execute('INSERT INTO pets VALUES (NULL, %s, %s, %s, %s, %s)', (animal, name, breed, weight, ownerID))
             mysql.connection.commit()
-            return redirect(url_for('listings'))
+            return redirect(url_for('pets'))
     else:
         return redirect(url_for('login'))
 
@@ -236,9 +193,50 @@ def pet():
 @app.route("/listings", methods=['GET', 'POST'])
 def listings():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute('SELECT * FROM pets')
+    cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
+    				FROM pets\
+    				INNER JOIN owners ON pets.owner = owners.ownerid\
+    				INNER JOIN users ON owners.userid = users.id")
     pets = cursor.fetchall()
+
     return render_template('listings.html', pets=pets);
+
+# @app.route("/register", methods=['GET', 'POST'])
+# def register():
+#     # Output message if something goes wrong...
+#     msg = ''
+#     # Check if "username", "password" and "email" POST requests exist (user submitted form)
+#     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+#         # Create variables for easy access
+#         username = request.form['username']
+#         password = request.form['password']
+#         email = request.form['email']
+#         # Check if account exists using MySQL
+#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#         cursor.execute("SELECT * FROM users WHERE username = '{0}'".format(username))
+#         account = cursor.fetchone()
+#         # If account exists show error and validation checks
+#         if account:
+#             msg = 'Account already exists!'
+#         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+#             msg = 'Invalid email address!'
+#         elif not re.match(r'[A-Za-z0-9]+', username):
+#             msg = 'Username must contain only characters and numbers!'
+#         elif not username or not password or not email:
+#             msg = 'Please fill out the form!'
+#         else:
+#             # Account doesnt exists and the form data is valid, now insert new account into accounts table
+#             cursor.execute('INSERT INTO users VALUES (NULL, %s, %s, %s)', (username, password, email))
+#             mysql.connection.commit()
+#
+#             return redirect(url_for('own'))
+#
+#
+#     elif request.method == 'POST':
+#         # Form is empty... (no POST data)
+#         msg = 'Please fill out the form!'
+#     # Show registration form with message (if any)
+#     return render_template('register.html', msg=msg)
 
 # ---- run method ---- #
 if __name__ == "__main__":

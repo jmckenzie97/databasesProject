@@ -12,25 +12,27 @@
                 background-image: url(static/images/gradient_pink-blue.jpg);
                 background-size: 150%;
                 background-repeat: no-repeat;
-                line-height: 50px;
+                line-height: 20px;
             }
         </style>
     </head>
 
     <body>
 	  	<table style="width:100%">
-			<tr>
+			<tr align="left">
 			  	<th>Name</th>
 			    <th>Animal</th>
 			    <th>Breed</th>
-			    <th>Weight</th>
+			    <th>Weight (lbs)</th>
+			    <th>Owner</th>
 			</tr>
 			{% for item in pets %}
 			<tr>
 			    <td>{{item['name']}}</td>
-			    <td>{{item['animal']}}</td>
+			    <td>{{item['pet']}}</td>
 			    <td>{{item['breed']}}</td>
 			    <td>{{item['weight']}}</td>
+			    <td>{{item['username']}}
 			</tr>
 			{% endfor %}
 		</table> 

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Remove Pet(s)</title>
+
+        <!-- url_for links the style sheet with the html in python -->
+        <link rel="stylesheet" href="/static/css/login_style.css"/>
+
+        <!-- this is the only code I got to work for setting the background -->
+        <style>
+            body {
+                background-image: url(static/images/gradient_pink-blue.jpg);
+                background-size: 150%;
+                background-repeat: no-repeat;
+                line-height: 20px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <form method="post">
+            <div class="table">
+                <table style="width:100%">
+                    <tr align="left">
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Animal</th>
+                        <th>Breed</th>
+                        <th>Weight (lbs)</th>
+                        <th>Remove</th>
+                    </tr>
+                    {% for item in pets %}
+                    <tr>
+                        <td>{{item['petid']}}
+                        <td>{{item['name']}}</td>
+                        <td>{{item['pet']}}</td>
+                        <td>{{item['breed']}}</td>
+                        <td>{{item['weight']}}</td>
+                        <td><input type="checkbox" name="checkbox{{item['rowNum']}}" value="{{item['petid']}}"></td>
+                    </tr>
+                    {% endfor %}
+                </table>
+                <input class="btn btn-default" type="submit" value="Remove">
+            </div>
+        </form>
+    </body>
+</html>

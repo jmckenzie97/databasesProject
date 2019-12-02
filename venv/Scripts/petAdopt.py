@@ -72,6 +72,8 @@ def home():
         if request.method == 'POST':
             if "Add Pet Listing" in request.form:
                 return redirect(url_for('pets'))
+            elif "Remove Pet Listing" in request.form:
+                return redirect(url_for('removePets'))
             elif "Logout" in request.form:
                 return redirect(url_for('logout'))
         else:
@@ -191,6 +193,32 @@ def pets():
         return redirect(url_for('login'))
 
     return render_template('pet.html')
+
+@app.route("/removePets", methods=['GET', 'POST'])
+def removePets():
+    request1 = request.form.to_dict()
+    if request1 and request.method == "POST":
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        for checkbox in request1:
+            petID = request1[checkbox]
+            cursor.execute("DELETE FROM pets WHERE petid={}".format(petID))
+            cursor.connection.commit()
+
+    if 'loggedin' in session:
+        userID = session['id']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT pets.* FROM pets\
+                        WHERE pets.owner IN (SELECT owners.ownerid FROM owners\
+                                             WHERE owners.userid IN (SELECT users.id FROM users\
+                                             WHERE users.id = {}))".format(userID))
+        pets = cursor.fetchall()
+        i = 1
+        for pet in pets:
+            pet.update({'rowNum' : i})
+            i += 1
+        return render_template('removePets.html', pets=pets)
+    else:
+        return redirect(url_for('login'))
 
 @app.route("/listings", methods=['GET', 'POST'])
 def listings():

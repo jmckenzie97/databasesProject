@@ -26,8 +26,9 @@
                     <input type="text" id="lfemail" placeholder="Username" name="username" value="{{ request.form.username }}"/>
                     <input type="password" id="lfpassword" placeholder="Password" name="password" value="{{ request.form.password }}"/>
                     <input class="btn btn-default" type="submit" value="Login">
-                    <p class="message">Not Registered? <a id="registerowner" href="{{ url_for('owner') }}">Register as an owner</a> </p>
-                    <p class="message">Not Registered? <a id="registeradopter" href="{{ url_for('adopter') }}">Register as an adopter</a> </p>
+                    <p class="message"><b>Not Registered?</b><br> <a id="registerowner" href="{{ url_for('owner') }}">Register as an owner<br></a> 
+                                                            <a id="registeradopter" href="{{ url_for('adopter') }}">Register as an adopter</a>
+                    </p>
                 </form>
             </div>
           </div>

@@ -213,16 +213,23 @@ def removePets():
         cursor.execute("SELECT pets.* FROM pets\
                         WHERE pets.owner IN (SELECT owners.ownerid FROM owners\
                                              WHERE owners.userid IN (SELECT users.id FROM users\
-                                             WHERE users.id = {}))".format(userID))
+                                                                     WHERE users.id = {}))".format(userID))
         pets = cursor.fetchall()
+
+        # Counter for use in removePets.html
         i = 1
         for pet in pets:
             pet.update({'rowNum' : i})
             i += 1
         return render_template('removePets.html', pets=pets)
+
     else:
         return redirect(url_for('login'))
 
+@app.route("/updatePets", methods=['GET', 'POST'])
+def updatePets():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        
 @app.route("/listings", methods=['GET', 'POST'])
 def listings():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

@@ -274,7 +274,75 @@ def changeProfile():
         cursor.execute("SELECT familysize FROM owners WHERE userid = '{0}'".format(session['id']))
         query = cursor.fetchone()
         size = query['familysize']
-        return render_template('changeProfile.html', username=session['username'], password=password, email=email, age=age,
+
+        if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+            # Create variables for easy access
+            username = request.form['username']
+            password = request.form['password']
+            email = request.form['email']
+            age = request.form['age']
+            homeType = request.form['hometype']
+
+            # Check if account exists using MySQL
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("SELECT * FROM users WHERE username = '{0}'".format(username))
+            account = cursor.fetchone()
+            # If account exists show error and validation checks
+            if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                msg = 'Invalid email address!'
+            elif not re.match(r'[A-Za-z0-9]+', username):
+                msg = 'Username must contain only characters and numbers!'
+            elif not username or not password or not email:
+                msg = 'Please fill out the form!'
+            else:
+                # Account doesnt exists and the form data is valid, now insert new account into accounts table
+                cursor.execute("UPDATE users SET username = '{0}', password = '{1}', email = '{2}' WHERE id = '{3}'".format(username, password, email, session['id']))
+                mysql.connection.commit()
+                cursor.execute("UPDATE owners SET age = '{0}', familysize = '{1}' WHERE userid = '{2}'".format(int(age), homeType, session['id']))
+                mysql.connection.commit()
+                return redirect(url_for('profile'))
+    else:
+        cursor.execute("SELECT email FROM users WHERE id = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        email = query['email']
+        cursor.execute("SELECT password FROM users WHERE id = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        password = query['password']
+        cursor.execute("SELECT age FROM adopters WHERE userid = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        age = query['age']
+        cursor.execute("SELECT hometype FROM adopters WHERE userid = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        size = query['hometype']
+
+        if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+            # Create variables for easy access
+            username = request.form['username']
+            password = request.form['password']
+            email = request.form['email']
+            age = request.form['age']
+            size = request.form['hometype']
+
+            # Check if account exists using MySQL
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+            cursor.execute("SELECT * FROM users WHERE username = '{0}'".format(username))
+            account = cursor.fetchone()
+            # If account exists show error and validation checks
+            if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+                msg = 'Invalid email address!'
+            elif not re.match(r'[A-Za-z0-9]+', username):
+                msg = 'Username must contain only characters and numbers!'
+            elif not username or not password or not email:
+                msg = 'Please fill out the form!'
+            else:
+                # Account doesnt exists and the form data is valid, now insert new account into accounts table
+                cursor.execute("UPDATE users SET username = '{0}', password = '{1}', email = '{2}' WHERE id = '{3}'".format(username, password, email, session['id']))
+                mysql.connection.commit()
+                cursor.execute("UPDATE adopters SET age = '{0}', hometype = '{1}' WHERE userid = '{2}'".format(int(age), size, session['id']))
+                mysql.connection.commit()
+                return redirect(url_for('profile'))
+
+    return render_template('changeProfile.html', username=session['username'], password=password, email=email, age=age,
                                type=size)
 
 # ---- run method ---- #

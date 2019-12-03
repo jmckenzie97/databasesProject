@@ -21,13 +21,13 @@
 		<div class="login-page">
           <div id="logo_blue_white"> <a href = "login.html"> <img src="{{ url_for('static', filename='images/CGS_3066_logo_blue.png') }}"/></a></div>
 		    <div class="form">
-                <form class="login-form" action="{{ url_for('owner') }}" method="post">
+                <form class="login-form" action="{{ url_for('adopter') }}" method="post">
                     <p class="message" style="color:red">{{ msg }}</p>
-                    <input type="email" id="lfemail" placeholder="Email" name="email" value="{{ request.form.email }}">
-                    <input type="text" id="lfuname" placeholder="Username" name="username" value="{{ request.form.username }}">
-                    <input type="password" id="lfpassword" placeholder="Password" name="password" value="{{ request.form.password }}">
-                    <input type="number" id="ownerAge" placeholder="Age" name="age" value="{{ request.form.age }}">
-                    <input type="number" id="famsize" placeholder="Num family members" name="famsize" value="{{ request.form.famsize }}">
+                   <input type="email" id="lfemail" placeholder="Email" name="email" value="{{ email }}">
+                    <input type="text" id="lfuname" placeholder="Username" name="username" value="{{ username }}">
+                    <input type="password" id="lfpassword" placeholder="Password" name="password" value="{{ password }}">
+                    <input type="number" id="adopterAge" placeholder="Age" name="age" value="{{ age }}">
+                    <input type="text" id="homeType" placeholder="Type of residence(Home, apt etc)" name="hometype" value="{{ type }}">
                     <input class="btn btn-default" type="submit" value="Register">
                 </form>
             </div>

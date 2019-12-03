@@ -11,7 +11,7 @@ app.secret_key = 'your secret key'
 # Enter your database connection details below
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_PASSWORD'] = 'MyNewPass'
 app.config['MYSQL_DB'] = 'petFinder'
 
 # Intialize MySQL
@@ -35,7 +35,7 @@ def login():
         password = request.form['password']
         # Check if account exists using MySQL
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM users WHERE email = %s AND password = %s', (username, password))
+        cursor.execute('SELECT * FROM users WHERE username = %s AND password = %s', (username, password))
         # Fetch one record and return result
         account = cursor.fetchone()
         # If account exists in accounts table in out database
@@ -174,14 +174,17 @@ def pets():
         if request.method == "POST" and 'name' in request.form and 'breed' in request.form and 'weight' in request.form:
             if request.method == "POST" and "View Listings" in request.form:
                 return redirect(url_for('listings'))
+            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             animal = request.form['animal']
             name = request.form['name'];
             breed = request.form['breed'];
             weight = request.form['weight'];
-            ownerID = session['id']
+            cursor.execute("SELECT ownerid FROM owners WHERE userid = '{0}'".format(session['id']))
+            query = cursor.fetchone()
+            ownerID = query['ownerid']
             ownerEmail = ""
 
-            cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
             cursor.execute("SELECT email FROM users WHERE id = '{0}'".format(ownerID))
             owner = cursor.fetchone()
             ownerEmail = owner['email']
@@ -238,42 +241,48 @@ def listings():
 
     return render_template('listings.html', pets=pets);
 
-# @app.route("/register", methods=['GET', 'POST'])
-# def register():
-#     # Output message if something goes wrong...
-#     msg = ''
-#     # Check if "username", "password" and "email" POST requests exist (user submitted form)
-#     if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
-#         # Create variables for easy access
-#         username = request.form['username']
-#         password = request.form['password']
-#         email = request.form['email']
-#         # Check if account exists using MySQL
-#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-#         cursor.execute("SELECT * FROM users WHERE username = '{0}'".format(username))
-#         account = cursor.fetchone()
-#         # If account exists show error and validation checks
-#         if account:
-#             msg = 'Account already exists!'
-#         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
-#             msg = 'Invalid email address!'
-#         elif not re.match(r'[A-Za-z0-9]+', username):
-#             msg = 'Username must contain only characters and numbers!'
-#         elif not username or not password or not email:
-#             msg = 'Please fill out the form!'
-#         else:
-#             # Account doesnt exists and the form data is valid, now insert new account into accounts table
-#             cursor.execute('INSERT INTO users VALUES (NULL, %s, %s, %s)', (username, password, email))
-#             mysql.connection.commit()
-#
-#             return redirect(url_for('own'))
-#
-#
-#     elif request.method == 'POST':
-#         # Form is empty... (no POST data)
-#         msg = 'Please fill out the form!'
-#     # Show registration form with message (if any)
-#     return render_template('register.html', msg=msg)
+@app.route("/profile", methods=['GET', 'POST'])
+def profile():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT email FROM users WHERE username = '{0}'".format(session['username']))
+    query = cursor.fetchone()
+    email = query['email']
+    cursor.execute("SELECT age FROM owners WHERE userid = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    if (cursor.rowcount > 0):
+        age = query['age']
+        cursor.execute("SELECT familysize FROM owners WHERE userid = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        size = query['familysize']
+        return render_template('profile.html', username=session['username'], email=email, age=age, owner="Family Size", famsize=size)
+    else:
+        cursor.execute("SELECT age FROM adopters WHERE userid = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        age = query['age']
+        cursor.execute("SELECT hometype FROM adopters WHERE userid = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        size = query['hometype']
+        return render_template('profile.html', username=session['username'], email=email, age=age, owner="Home Type",
+                               famsize=size)
+
+@app.route("/profile/changeProfile", methods=['GET', 'POST'])
+def changeProfile():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT age FROM owners WHERE userid = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    if (cursor.rowcount > 0):
+        age = query['age']
+        cursor.execute("SELECT email FROM users WHERE id = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        email = query['email']
+        cursor.execute("SELECT password FROM users WHERE id = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        password = query['password']
+        cursor.execute("SELECT familysize FROM owners WHERE userid = '{0}'".format(session['id']))
+        query = cursor.fetchone()
+        size = query['familysize']
+        return render_template('changeProfile.html', username=session['username'], password=password, email=email, age=age,
+                               type=size)
 
 # ---- run method ---- #
 if __name__ == "__main__":

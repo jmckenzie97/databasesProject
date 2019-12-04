@@ -250,12 +250,18 @@ def profile():
     cursor.execute("SELECT age FROM owners WHERE userid = '{0}'".format(session['id']))
     query = cursor.fetchone()
     if (cursor.rowcount > 0):
+        method = request.method
+        if request.method == "POST":
+            return redirect(url_for('changeProfile'))
         age = query['age']
         cursor.execute("SELECT familysize FROM owners WHERE userid = '{0}'".format(session['id']))
         query = cursor.fetchone()
         size = query['familysize']
         return render_template('profile.html', username=session['username'], email=email, age=age, owner="Family Size", famsize=size)
     else:
+        method = request.method
+        if request.method == "GET":
+            return redirect(url_for('changeProfile'))
         cursor.execute("SELECT age FROM adopters WHERE userid = '{0}'".format(session['id']))
         query = cursor.fetchone()
         age = query['age']
@@ -288,7 +294,7 @@ def changeProfile():
             password = request.form['password']
             email = request.form['email']
             age = request.form['age']
-            homeType = request.form['hometype']
+            homeType = request.form['famsize']
 
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -328,7 +334,6 @@ def changeProfile():
             password = request.form['password']
             email = request.form['email']
             age = request.form['age']
-            size = request.form['hometype']
 
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -349,8 +354,170 @@ def changeProfile():
                 mysql.connection.commit()
                 return redirect(url_for('profile'))
 
-    return render_template('changeProfile.html', username=session['username'], password=password, email=email, age=age,
-                               type=size)
+    return render_template('changeProfile.html', username=session['username'], password=password, email=email, age=age)
+
+@app.route("/changeProfileOwner", methods=['GET', 'POST'])
+def changeProfileOwner():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT age FROM owners WHERE userid = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    age = query['age']
+    cursor.execute("SELECT email FROM users WHERE id = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    email = query['email']
+    cursor.execute("SELECT password FROM users WHERE id = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    password = query['password']
+    cursor.execute("SELECT familysize FROM owners WHERE userid = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    size = query['familysize']
+
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+        # Create variables for easy access
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        age = request.form['age']
+        homeType = request.form['hometype']
+
+        # Check if account exists using MySQL
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM users WHERE username = '{0}'".format(username))
+        account = cursor.fetchone()
+        # If account exists show error and validation checks
+        if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = 'Invalid email address!'
+        elif not re.match(r'[A-Za-z0-9]+', username):
+            msg = 'Username must contain only characters and numbers!'
+        elif not username or not password or not email:
+            msg = 'Please fill out the form!'
+        else:
+            # Account doesnt exists and the form data is valid, now insert new account into accounts table
+            cursor.execute(
+                "UPDATE users SET username = '{0}', password = '{1}', email = '{2}' WHERE id = '{3}'".format(username,
+                                                                                                             password,
+                                                                                                             email,
+                                                                                                             session[
+                                                                                                                 'id']))
+            mysql.connection.commit()
+            cursor.execute(
+                "UPDATE owners SET age = '{0}', familysize = '{1}' WHERE userid = '{2}'".format(int(age), homeType,
+                                                                                                session['id']))
+            mysql.connection.commit()
+            return redirect(url_for('profile'))
+    return render_template('changeProfileOwner.html', username=session['username'], password=password, email=email, age=age,
+                           type=size)
+
+
+
+@app.route("/changeProfileAdopter", methods=['GET', 'POST'])
+def changeProfileAdopter():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT age FROM owners WHERE userid = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    cursor.execute("SELECT email FROM users WHERE id = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    email = query['email']
+    cursor.execute("SELECT password FROM users WHERE id = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    password = query['password']
+    cursor.execute("SELECT age FROM adopters WHERE userid = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    age = query['age']
+    cursor.execute("SELECT hometype FROM adopters WHERE userid = '{0}'".format(session['id']))
+    query = cursor.fetchone()
+    size = query['hometype']
+    method = request.method
+
+    if request.method == 'POST' and 'username' in request.form and 'password' in request.form and 'email' in request.form:
+        # Create variables for easy access
+        username = request.form['username']
+        password = request.form['password']
+        email = request.form['email']
+        age = request.form['age']
+        size = request.form['hometype']
+
+        # Check if account exists using MySQL
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        cursor.execute("SELECT * FROM users WHERE username = '{0}'".format(username))
+        account = cursor.fetchone()
+        # If account exists show error and validation checks
+        if not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+            msg = 'Invalid email address!'
+        elif not re.match(r'[A-Za-z0-9]+', username):
+            msg = 'Username must contain only characters and numbers!'
+        elif not username or not password or not email:
+            msg = 'Please fill out the form!'
+        else:
+            # Account doesnt exists and the form data is valid, now insert new account into accounts table
+            cursor.execute(
+                "UPDATE users SET username = '{0}', password = '{1}', email = '{2}' WHERE id = '{3}'".format(username,
+                                                                                                             password,
+                                                                                                             email,
+                                                                                                             session[
+                                                                                                                 'id']))
+            mysql.connection.commit()
+            cursor.execute(
+                "UPDATE adopters SET age = '{0}', hometype = '{1}' WHERE userid = '{2}'".format(int(age), size,
+                                                                                                session['id']))
+            mysql.connection.commit()
+            return redirect(url_for('profile'))
+
+    return render_template('changeProfileAdopter.html', username=session['username'], password=password, email=email, age=age,
+                           type=size)
+
+@app.route("/feelinglucky", methods=['GET', 'POST'])
+def feelinglucky():
+    userid = session['id']
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    cursor.execute("SELECT hometype FROM adopters WHERE userid = '{0}'".format(userid))
+    query = cursor.fetchone()
+    hometype = query['hometype']
+    if hometype in ['RV', 'Boat', "Apartment", "Trailer"]:
+        cursor.execute("SELECT * FROM pets WHERE weight < '30'")
+        query1 = cursor.fetchone()
+        pet = query1['pet']
+        name = query1['name']
+        breed = query1['breed']
+        weight = query1['weight']
+        ownerid = query1['owner']
+        cursor.execute("SELECT userid FROM owners WHERE ownerid = '{0}'".format(ownerid))
+        query1 = cursor.fetchone()
+        userid = query1['userid']
+        cursor.execute("SELECT username FROM users WHERE id = '{0}'".format(userid))
+        query1 = cursor.fetchone()
+        ownerName = query1['username']
+        return render_template('feelinglucky.html', pet=pet, name=name, breed=breed, weight=weight, username=ownerName)
+    elif hometype in ['House', 'Townhome']:
+        cursor.execute("SELECT * FROM pets WHERE weight > '50'")
+        query1 = cursor.fetchone()
+        pet = query1['pet']
+        name = query1['name']
+        breed = query1['breed']
+        weight = query1['weight']
+        ownerid = query1['owner']
+        cursor.execute("SELECT userid FROM owners WHERE ownerid = '{0}'".format(ownerid))
+        query1 = cursor.fetchone()
+        userid = query1['userid']
+        cursor.execute("SELECT username FROM users WHERE id = '{0}'".format(userid))
+        query1 = cursor.fetchone()
+        ownerName = query1['username']
+        return render_template('feelinglucky.html', pet=pet, name=name, breed=breed, weight=weight, username=ownerName)
+    else:
+        cursor.execute("SELECT * FROM pets WHERE weight > '30' AND weight < '50'")
+        query1 = cursor.fetchone()
+        pet = query1['pet']
+        name = query1['name']
+        breed = query1['breed']
+        weight = query1['weight']
+        ownerid = query1['owner']
+        cursor.execute("SELECT userid FROM owners WHERE ownerid = '{0}'".format(ownerid))
+        query1 = cursor.fetchone()
+        userid = query1['userid']
+        cursor.execute("SELECT username FROM users WHERE id = '{0}'".format(userid))
+        query1 = cursor.fetchone()
+        ownerName = query1['username']
+        return render_template('feelinglucky.html', pet=pet, name=name, breed=breed, weight=weight, username=ownerName)
 
 # ---- run method ---- #
 if __name__ == "__main__":

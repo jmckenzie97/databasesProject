@@ -316,7 +316,7 @@ def profile():
         return render_template('profile.html', username=session['username'], email=email, age=age, owner="Family Size", famsize=size)
     else:
         method = request.method
-        if request.method == "GET":
+        if request.method == "POST":
             return redirect(url_for('changeProfile'))
         cursor.execute("SELECT age FROM adopters WHERE userid = '{0}'".format(session['id']))
         query = cursor.fetchone()
@@ -390,7 +390,7 @@ def changeProfile():
             password = request.form['password']
             email = request.form['email']
             age = request.form['age']
-
+            size = request.form['hometype']
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute("SELECT * FROM users WHERE username = '{0}'".format(username))
@@ -547,7 +547,7 @@ def feelinglucky():
         return render_template('feelinglucky.html', pet=pet, name=name, breed=breed, weight=weight, username=ownerName)
     elif hometype in ['House', 'Townhome']:
         cursor.execute("SELECT * FROM pets WHERE weight > '50'")
-        query1 = cursor.fetchone()
+        query1 = cursor.fetchall()
         pets = random.choice(query1)
         pet = pets['pet']
         name = pets['name']
@@ -563,7 +563,7 @@ def feelinglucky():
         return render_template('feelinglucky.html', pet=pet, name=name, breed=breed, weight=weight, username=ownerName)
     else:
         cursor.execute("SELECT * FROM pets WHERE weight > '30' AND weight < '50'")
-        query1 = cursor.fetchone()
+        query1 = cursor.fetchall()
         pets = random.choice(query1)
         pet = pets['pet']
         name = pets['name']

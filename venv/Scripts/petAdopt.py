@@ -562,7 +562,7 @@ def feelinglucky():
         ownerName = query1['username']
         return render_template('feelinglucky.html', pet=pet, name=name, breed=breed, weight=weight, username=ownerName)
     else:
-        cursor.execute("SELECT * FROM pets WHERE weight > '30' AND weight < '50'")
+        cursor.execute("SELECT * FROM pets WHERE weight > 30 AND weight < 50")
         query1 = cursor.fetchall()
         pets = random.choice(query1)
         pet = pets['pet']

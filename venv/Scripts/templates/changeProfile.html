@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-    	<title>Update your profile</title>
+    	<title>Sign in or Sign Up</title>
 
         <!-- url_for links the style sheet with the html in python -->
     	<link rel="stylesheet" href="{{ url_for('static', filename='css/login_style.css') }}"/>
@@ -27,17 +27,7 @@
                     <input type="text" id="lfuname" placeholder="Username" name="username" value="{{ username }}">
                     <input type="password" id="lfpassword" placeholder="Password" name="password" value="{{ password }}">
                     <input type="number" id="adopterAge" placeholder="Age" name="age" value="{{ age }}">
-                    <input type="text" id="size" placeholder="Family Size" name="famsize" value="{{ size }}">
-                     <select name="hometype">
-                      <option value="House">House</option>
-                      <option value="Apartment">Apartment</option>
-                      <option value="Condo">Condo</option>
-                      <option value="Trailer">Trailer</option>
-                      <option value="RV">RV</option>
-                      <option value="Townhome">Townhome</option>
-                      <option value="Penthouse">Penthouse</option>
-                      <option value="Boat">Boat</option>
-                    </select>
+                    <input type="text" id="homeType" placeholder="Family Size" name="famsize" value="{{ type }}">
                     <input class="btn btn-default" type="submit" value="Update Profile">
                 </form>
             </div>

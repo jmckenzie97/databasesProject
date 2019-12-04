@@ -253,17 +253,12 @@ def profile():
     query = cursor.fetchone()
     if (cursor.rowcount > 0):
         method = request.method
-        if request.method == "POST":
-            return redirect(url_for('changeProfile'))
         age = query['age']
         cursor.execute("SELECT familysize FROM owners WHERE userid = '{0}'".format(session['id']))
         query = cursor.fetchone()
         size = query['familysize']
         return render_template('profile.html', username=session['username'], email=email, age=age, owner="Family Size", famsize=size)
     else:
-        method = request.method
-        if request.method == "POST":
-            return redirect(url_for('changeProfile'))
         cursor.execute("SELECT age FROM adopters WHERE userid = '{0}'".format(session['id']))
         query = cursor.fetchone()
         age = query['age']
@@ -273,7 +268,7 @@ def profile():
         return render_template('profile.html', username=session['username'], email=email, age=age, owner="Home Type",
                                famsize=size)
 
-@app.route("/profile/changeProfile", methods=['GET', 'POST'])
+@app.route("/changeProfile", methods=['GET', 'POST'])
 def changeProfile():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     cursor.execute("SELECT age FROM owners WHERE userid = '{0}'".format(session['id']))
@@ -336,7 +331,7 @@ def changeProfile():
             password = request.form['password']
             email = request.form['email']
             age = request.form['age']
-            size = request.form['hometype']
+            size = request.form['famsize']
             # Check if account exists using MySQL
             cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
             cursor.execute("SELECT * FROM users WHERE username = '{0}'".format(username))
@@ -356,7 +351,7 @@ def changeProfile():
                 mysql.connection.commit()
                 return redirect(url_for('profile'))
 
-    return render_template('changeProfile.html', username=session['username'], password=password, email=email, age=age)
+    return render_template('changeProfile.html', username=session['username'], password=password, email=email, age=age, type=size)
 
 @app.route("/changeProfileOwner", methods=['GET', 'POST'])
 def changeProfileOwner():

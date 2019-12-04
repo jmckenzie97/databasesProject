@@ -1,3 +1,5 @@
+import random
+
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
 import MySQLdb.cursors
@@ -475,12 +477,13 @@ def feelinglucky():
     hometype = query['hometype']
     if hometype in ['RV', 'Boat', "Apartment", "Trailer"]:
         cursor.execute("SELECT * FROM pets WHERE weight < '30'")
-        query1 = cursor.fetchone()
-        pet = query1['pet']
-        name = query1['name']
-        breed = query1['breed']
-        weight = query1['weight']
-        ownerid = query1['owner']
+        query1 = cursor.fetchall()
+        pets = random.choice(query1)
+        pet = pets['pet']
+        name = pets['name']
+        breed = pets['breed']
+        weight = pets['weight']
+        ownerid = pets['owner']
         cursor.execute("SELECT userid FROM owners WHERE ownerid = '{0}'".format(ownerid))
         query1 = cursor.fetchone()
         userid = query1['userid']
@@ -491,11 +494,12 @@ def feelinglucky():
     elif hometype in ['House', 'Townhome']:
         cursor.execute("SELECT * FROM pets WHERE weight > '50'")
         query1 = cursor.fetchone()
-        pet = query1['pet']
-        name = query1['name']
-        breed = query1['breed']
-        weight = query1['weight']
-        ownerid = query1['owner']
+        pets = random.choice(query1)
+        pet = pets['pet']
+        name = pets['name']
+        breed = pets['breed']
+        weight = pets['weight']
+        ownerid = pets['owner']
         cursor.execute("SELECT userid FROM owners WHERE ownerid = '{0}'".format(ownerid))
         query1 = cursor.fetchone()
         userid = query1['userid']
@@ -506,11 +510,12 @@ def feelinglucky():
     else:
         cursor.execute("SELECT * FROM pets WHERE weight > '30' AND weight < '50'")
         query1 = cursor.fetchone()
-        pet = query1['pet']
-        name = query1['name']
-        breed = query1['breed']
-        weight = query1['weight']
-        ownerid = query1['owner']
+        pets = random.choice(query1)
+        pet = pets['pet']
+        name = pets['name']
+        breed = pets['breed']
+        weight = pets['weight']
+        ownerid = pets['owner']
         cursor.execute("SELECT userid FROM owners WHERE ownerid = '{0}'".format(ownerid))
         query1 = cursor.fetchone()
         userid = query1['userid']

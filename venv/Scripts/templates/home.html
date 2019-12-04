@@ -1,8 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Home</title>
+
+        <!-- url_for links the style sheet with the html in python -->
+
+
+        <!-- this is the only code I got to work for setting the background -->
+        <style>
+            body {
+                background-image: url(static/images/gradient_pink-blue.jpg);
+                background-size: 150%;
+                background-repeat: no-repeat;
+                line-height: 20px;
+            }
+        </style>
+	</head>
+
 <h2>Home Page</h2>
 <p>Welcome back, {{ username }}!</p>
+<div>
 <form action="/pets" method="post">
     <input class="btn btn-default" type="submit" value="Add Pet Listing">
 </form>
+	</div>
 <form action="/removePets", method="post">
 	<input class="btn btn-default" type="submit" value="Remove Pet Listing">
 </form>
@@ -18,4 +39,4 @@
 <form action="/pythonlogin/logout" method="post">
 	<input class="btn btn-default" type="submit" value="Logout">
 </form>
-
+</html>

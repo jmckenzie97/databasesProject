@@ -2,6 +2,14 @@
 <html>
     <head>
     	<title>Your Profile</title>
+		<style>
+            body {
+                background-image: url(static/images/gradient_pink-blue.jpg);
+                background-size: 150%;
+                background-repeat: no-repeat;
+                line-height: 50px;
+            }
+        </style>
 	</head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <body>
@@ -11,7 +19,7 @@
 <p>{{ owner }}: {{ famsize }}</p>
 
 
-<form action="{{ url_for('changeProfile') }}" method="post">
+<form method="get">
 	<input class="btn btn-default" type="submit" value="Change Profile">
 </form>
 </body>

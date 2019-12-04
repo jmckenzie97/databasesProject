@@ -248,7 +248,7 @@ def listings():
         breed = vals[1].strip()
         weight = vals[2].strip()
 
-        if species:
+        if species and not weight:
             cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
                             FROM pets\
                             INNER JOIN owners ON pets.owner = owners.ownerid\
@@ -256,7 +256,7 @@ def listings():
                             WHERE pets.pet = '{}'".format(species))
             pets = cursor.fetchall()
 
-        if breed:
+        elif breed and not weight:
             cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
                             FROM pets\
                             INNER JOIN owners ON pets.owner = owners.ownerid\
@@ -264,7 +264,7 @@ def listings():
                             WHERE pets.breed = '{}'".format(breed))
             pets = cursor.fetchall()
 
-        if weight and species:
+        elif weight and species:
             cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
                             FROM pets\
                             INNER JOIN owners ON pets.owner = owners.ownerid\

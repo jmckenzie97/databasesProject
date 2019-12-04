@@ -225,19 +225,73 @@ def removePets():
 
     else:
         return redirect(url_for('login'))
-
-@app.route("/updatePets", methods=['GET', 'POST'])
-def updatePets():
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
         
 @app.route("/listings", methods=['GET', 'POST'])
 def listings():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
-                    FROM pets\
-                    INNER JOIN owners ON pets.owner = owners.ownerid\
-                    INNER JOIN users ON owners.userid = users.id")
-    pets = cursor.fetchall()
+    pets = []
+    postData = request.form.to_dict()
+
+    if not postData and request.method == "POST":
+        cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
+                        FROM pets\
+                        INNER JOIN owners ON pets.owner = owners.ownerid\
+                        INNER JOIN users ON owners.userid = users.id")
+        pets = cursor.fetchall()
+
+    elif postData and request.method == "POST":
+        keys = list(postData.keys())
+        vals = list(postData.values())
+        species = vals[0].strip()
+        breed = vals[1].strip()
+        weight = vals[2].strip()
+
+        if species:
+            cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
+                            FROM pets\
+                            INNER JOIN owners ON pets.owner = owners.ownerid\
+                            INNER JOIN users ON owners.userid = users.id\
+                            WHERE pets.pet = '{}'".format(species))
+            pets = cursor.fetchall()
+
+        if breed:
+            cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
+                            FROM pets\
+                            INNER JOIN owners ON pets.owner = owners.ownerid\
+                            INNER JOIN users ON owners.userid = users.id\
+                            WHERE pets.breed = '{}'".format(breed))
+            pets = cursor.fetchall()
+
+        if weight and species:
+            cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
+                            FROM pets\
+                            INNER JOIN owners ON pets.owner = owners.ownerid\
+                            INNER JOIN users ON owners.userid = users.id\
+                            WHERE pets.weight <= {} AND pets.pet = '{}'".format(weight, species))
+            pets = cursor.fetchall()
+
+        elif weight and breed:
+            cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
+                            FROM pets\
+                            INNER JOIN owners ON pets.owner = owners.ownerid\
+                            INNER JOIN users ON owners.userid = users.id\
+                            WHERE pets.weight <= {} AND pets.breed = '{}'".format(weight, breed))
+            pets = cursor.fetchall()
+
+        elif weight:
+            cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
+                            FROM pets\
+                            INNER JOIN owners ON pets.owner = owners.ownerid\
+                            INNER JOIN users ON owners.userid = users.id\
+                            WHERE pets.weight <= {}".format(weight))
+            pets = cursor.fetchall()
+
+        elif not weight and not species and not weight:
+            cursor.execute("SELECT pets.pet, pets.name, pets.breed, pets.weight, users.username\
+                            FROM pets\
+                            INNER JOIN owners ON pets.owner = owners.ownerid\
+                            INNER JOIN users ON owners.userid = users.id")
+            pets = cursor.fetchall()
 
     return render_template('listings.html', pets=pets);
 

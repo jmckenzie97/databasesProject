@@ -18,6 +18,12 @@
     </head>
 
     <body>
+    	<form name="Filter" action="/listings", method="post">
+			<input class="btn btn-default" type="submit" value="Filter">
+			<input class="text" type="text" placeholder="Dog/Cat" name="species" value="">
+			<input class="text" type="text" placeholder="Breed" name="breed" value="">
+			<input class="text" type="text" placeholder="Up To Weight (Lbs)" name="weight" value="">
+		</form>
 	  	<table style="width:100%">
 			<tr align="left">
 			  	<th>Name</th>

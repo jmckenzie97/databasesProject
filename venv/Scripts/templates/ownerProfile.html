@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-    	<title>Your Profile</title>
+    	<title>Owner Profile</title>
 		<style>
             body {
                 background-image: url(static/images/gradient_pink-blue.jpg);
@@ -19,8 +19,8 @@
 <p>{{ owner }}: {{ famsize }}</p>
 
 
-<form action="/changeProfile" method="get">
-	<input class="btn btn-default" type="submit" value="Change Profile">
+<form action="/changeProfileOwner" method="get">
+	<input class="btn btn-default" type="submit" value="Change Profile" name="changeOwner">
 </form>
 </body>
 </html>

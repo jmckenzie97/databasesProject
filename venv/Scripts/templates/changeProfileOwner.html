@@ -21,10 +21,9 @@
 		<div class="login-page">
           <div id="logo_blue_white"> <a href = "login.html"> <img src="{{ url_for('static', filename='images/CGS_3066_logo_blue.png') }}"/></a></div>
 		    <div class="form">
-                <form class="login-form" action="{{ url_for('changeProfile') }}" method="post">
+                <form class="login-form" action="{{ url_for('changeProfileOwner') }}" method="post">
                     <p class="message" style="color:red">{{ msg }}</p>
                    <input type="email" id="lfemail" placeholder="Email" name="email" value="{{ email }}">
-                    <input type="text" id="lfuname" placeholder="Username" name="username" value="{{ username }}">
                     <input type="password" id="lfpassword" placeholder="Password" name="password" value="{{ password }}">
                     <input type="number" id="adopterAge" placeholder="Age" name="age" value="{{ age }}">
                     <input type="text" id="homeType" placeholder="Type of residence(Home, apt etc)" name="hometype" value="{{ type }}">

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    	<title>Adopter Profile</title>
+		<style>
+            body {
+                background-image: url(static/images/gradient_pink-blue.jpg);
+                background-size: 150%;
+                background-repeat: no-repeat;
+                line-height: 50px;
+            }
+        </style>
+	</head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<body>
+<h2>{{ username }}</h2>
+<p>Email: {{ email }}</p>
+<p>Age: {{ age }}</p>
+<p>{{ owner }}: {{ famsize }}</p>
+
+
+<form action="/changeProfileAdopter" method="post">
+	<input class="btn btn-default" type="submit" value="Change Profile" name="changeAdopter">
+</form>
+</body>
+</html>

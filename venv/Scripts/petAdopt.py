@@ -71,6 +71,12 @@ def logout():
 def home():
     # Check if user is loggedin
     if 'loggedin' in session:
+
+        userID = session['id']
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+        owner = cursor.execute('SELECT ownerid FROM owners WHERE userid = {};'.format(userID))
+        adopter = cursor.execute('SELECT adopterid FROM adopters WHERE userid = {};'.format(userID))
+
         if request.method == 'POST':
             if "Add Pet Listing" in request.form:
                 return redirect(url_for('pets'))
@@ -80,7 +86,10 @@ def home():
                 return redirect(url_for('logout'))
         else:
             # User is loggedin show them the home page
-            return render_template('home.html', username=session['username'])
+            if (owner):
+                return render_template('ownerHome.html', username=session['username'])
+            elif(adopter):
+                return render_template('adopterHome.html', username=session['username'])
     # User is not loggedin redirect to login page
     return redirect(url_for('login'))
 
